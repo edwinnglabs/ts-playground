@@ -15,7 +15,9 @@ jobs:
         - uses: actions/setup-node@v1
 
         - name: run bash
-          run: ./tasks/test.sh
+          run: |
+            git update-index --chmod=+x ./tasks/test.sh
+            ./tasks/test.sh
 
         - name: update file
           uses: test-room-7/action-update-file@v1
