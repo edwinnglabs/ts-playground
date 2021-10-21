@@ -5,7 +5,7 @@ on:
     - cron: "*/30 * * * *"
 jobs:
     resources:
-        name: Update resources
+        name: hello world
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v1
