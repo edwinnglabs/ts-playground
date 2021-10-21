@@ -1,1 +1,1 @@
-date >> hello-world.log
+date >>  ./source/test/hello-world.log
