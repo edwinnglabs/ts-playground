@@ -1,0 +1,1 @@
+date >> hello-world.log
