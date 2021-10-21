@@ -4,11 +4,13 @@ name: pypi-stat-update
 on:
   schedule:
     # Runs "at minute 0 past every hour"
-    - cron: '0 * * * *'
+    - cron: '5 * * * *'
 jobs:
   build:
     name: tests
     runs-on: ubuntu-latest
     steps:
       - name: test1
-        run: ./tasks/test.sh
+        run: |
+          git update-index --chmod=+x ./tasks/test.sh
+          ./tasks/test.sh
