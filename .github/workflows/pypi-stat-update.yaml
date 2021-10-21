@@ -14,5 +14,12 @@ jobs:
 
         - uses: actions/setup-node@v1
 
-        - name: test1
+        - name: run bash
           run: ./tasks/test.sh
+
+        - name: update file
+          uses: test-room-7/action-update-file@v1
+          with:
+            file-path: source/test/hello-world.log
+            commit-msg: hello world
+            github-token: ${{ secrets.GITHUB_TOKEN }}
