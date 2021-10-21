@@ -2,7 +2,7 @@
 name: pypi-stat-update
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/1 * * * *"
 jobs:
     resources:
         name: hello world
