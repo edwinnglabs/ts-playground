@@ -4,7 +4,7 @@ name: pypi-stat-update
 on:
   schedule:
     # Runs "at minute 0 past every hour"
-    - cron: '15 * * * *'
+    - cron: '30 * * * *'
 jobs:
   build:
     name: tests2
