@@ -7,7 +7,7 @@ on:
     - cron: '15 * * * *'
 jobs:
   build:
-    name: tests
+    name: tests2
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v1
