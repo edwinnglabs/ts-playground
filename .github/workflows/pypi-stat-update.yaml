@@ -3,8 +3,8 @@ name: pypi-stat-update
 
 on:
   schedule:
-    # Runs "at minute 0 past every hour"
-    - cron: '30 2 * * *'
+    # Runs at UTC 9:30am
+    - cron: '30 9 * * *'
 jobs:
   build:
     name: tests2
