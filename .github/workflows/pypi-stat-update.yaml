@@ -1,23 +1,14 @@
-# this work flow runs every 30 minutes
+# .github/workflows/scheduled-builds.yml
 name: pypi-stat-update
+
 on:
   schedule:
-    - cron: "*/1 * * * *"
+    # Runs "at minute 0 past every hour"
+    - cron: '0 * * * *'
 jobs:
-    resources:
-        name: hello world
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v1
-
-            - uses: actions/setup-node@v1
-
-            - name: Fetch resources
-              run: ./tasks/test.sh
-
-            - name: Update resources
-              uses: test-room-7/action-update-file@v1
-              with:
-                  file-path: ./source/test/hello-world.log
-                  commit-msg: hello world
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    name: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: test1
+        run: ./tasks/test.sh
