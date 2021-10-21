@@ -1,7 +1,8 @@
+# this work flow runs every 30 minutes
 name: pypi-stat-update
 on:
   schedule:
-    - cron: "*/30 * * * 1"
+    - cron: "*/30 * * * *"
 jobs:
     resources:
         name: Update resources
