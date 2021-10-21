@@ -17,7 +17,7 @@ jobs:
         - name: run bash
           run: |
             git update-index --chmod=+x ./tasks/test.sh
-            ./tasks/test.sh
+            sh ./tasks/test.sh
 
         - name: update file
           uses: test-room-7/action-update-file@v1
