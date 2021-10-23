@@ -32,8 +32,10 @@ def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-0
         # pip install --upgrade 'google-cloud-bigquery[bqstorage,pandas]' to have the .to_dataframe() properties
         # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "../../orbit-ml-downloads-keys.json"
         credentials = service_account.Credentials.from_service_account_file(
-            key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
+            "../../orbit-ml-downloads-keys.json",
+            scopes=["https://www.googleapis.com/auth/cloud-platform"],
         )
+        print(credentials)
         client = bigquery.Client(credentials=credentials, project="orbit-ml-downloads")
         print("Running query...")
         query_job = client.query(
@@ -59,7 +61,7 @@ def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-0
 
 
 def download_pypi_stats(path='./', **kwargs):
-    df = download_pypistats(**kwargs)
+    df = get_pypi_stats(**kwargs)
     ts = generate_timestamp()
     print("Saving result as csv file...")
     df.to_csv("{}/orbit-ml-download-{}.csv".format(path, ts), index=False)
