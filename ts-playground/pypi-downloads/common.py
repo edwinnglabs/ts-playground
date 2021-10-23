@@ -3,6 +3,7 @@ import os
 import pypistats
 from datetime import datetime
 from datetime import date
+from google.oauth2 import service_account
 
 
 def generate_timestamp():
@@ -11,25 +12,28 @@ def generate_timestamp():
     return ts_str
 
 
-def download_pypistats(source='pypistats', start_date='2020-09-01', end_date='2020-12-31'):
+def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-09-10'):
     """
     Parameters
     ----------
     source : str
-        either 'pypistats' or 'bigquery'
+        either 'pypi-stats' or 'big-query'
     start_date : str
     end_date : str
     Returns
     -------
     pd.DataFrame
     """
-    if source == 'pypistats':
+    if source == 'pypi-stats':
         print("Calling pypistats...")
         df = pypistats.overall('orbit-ml', total=True, format="pandas")
     elif source == 'big-query':
         # pip install --upgrade 'google-cloud-bigquery[bqstorage,pandas]' to have the .to_dataframe() properties
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "../../orbit-ml-downloads-keys.json"
-        client = bigquery.Client(project="orbit-ml-downloads")
+        # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "../../orbit-ml-downloads-keys.json"
+        credentials = service_account.Credentials.from_service_account_file(
+            key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
+        )
+        client = bigquery.Client(credentials=credentials, project="orbit-ml-downloads")
         print("Running query...")
         query_job = client.query(
             """
@@ -47,17 +51,19 @@ def download_pypistats(source='pypistats', start_date='2020-09-01', end_date='20
     else:
         raise Exception("Invalid source.")
 
-    ts = generate_timestamp()
     update_date = date.today()
     df["update_date"] = update_date
+    print("Done.")
+    return df
+
+
+def download_pypi_stats(path='./', **kwargs):
+    df = download_pypistats(**kwargs)
+    ts = generate_timestamp()
     print("Saving result as csv file...")
-    df.to_csv("orbit-ml-download-{}.csv".format(ts), index=False)
+    df.to_csv("{}/orbit-ml-download-{}.csv".format(path, ts), index=False)
     print("Done.")
 
 
-# TODO: refactor as a module make file path, query, project name, package arbitrary
-
 if __name__ != 'main':
-    # when you need to download from raw
-    download_pypistats(source='big-query', start_date='2021-01-01', end_date='2021-03-31')
-
+    download_pypi_stats()
