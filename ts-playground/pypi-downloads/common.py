@@ -25,9 +25,10 @@ def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-0
     pd.DataFrame
     """
     if source == 'pypi-stats':
-        print("Calling pypistats...")
+        print("Calling pypi-stats...")
         df = pypistats.overall('orbit-ml', total=True, format="pandas")
     elif source == 'big-query':
+        print("Calling big-query...")
         # pip install --upgrade 'google-cloud-bigquery[bqstorage,pandas]' to have the .to_dataframe() properties
         # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "../../orbit-ml-downloads-keys.json"
         credentials = service_account.Credentials.from_service_account_file(
