@@ -43,7 +43,7 @@ def build_json(input_dict, path):
         json.dump(input_dict, f, indent=4)
 
 
-def build_big_query_json(path, **kwargs):
+def build_big_query_json(path="temp.json", **kwargs):
     """
     Parameters
     ----------
@@ -55,24 +55,25 @@ def build_big_query_json(path, **kwargs):
     input_dict = dict()
     for key, val in BIG_QUERY_REQUIREMENT.items():
         input_dict[val] = kwargs[val]
-    build_json(input_dict, path=path)
+    build_json(input_dict=input_dict, path=path)
 
 
-if __name__ != 'main':
-    # test build json
-    build_big_query_json(
-        type="service_account",
-        project_id="orbit-ml-downloads",
-        private_key_id="1234",
-        private_key="1234",
-        client_email="orbit-downloads-551@orbit-ml-downloads.iam.gserviceaccount.com",
-        client_id="1234",
-        auth_uri="https://accounts.google.com/o/oauth2/auth",
-        token_uri="https://oauth2.googleapis.com/token",
-        auth_provider_x509_cert_url="https://www.googleapis.com/oauth2/v1/certs",
-        client_x509_cert_url="https://www.googleapis.com/robot/v1/metadata/x509/orbit-downloads-"
-                             "551%40orbit-ml-downloads.iam.gserviceaccount.com"
-    )
+# if __name__ != 'main':
+#     # test build json
+#     build_big_query_json(
+#         path="temp.json",
+#         type="service_account",
+#         project_id="orbit-ml-downloads",
+#         private_key_id="1234",
+#         private_key="1234",
+#         client_email="orbit-downloads-551@orbit-ml-downloads.iam.gserviceaccount.com",
+#         client_id="1234",
+#         auth_uri="https://accounts.google.com/o/oauth2/auth",
+#         token_uri="https://oauth2.googleapis.com/token",
+#         auth_provider_x509_cert_url="https://www.googleapis.com/oauth2/v1/certs",
+#         client_x509_cert_url="https://www.googleapis.com/robot/v1/metadata/x509/orbit-downloads-"
+#                              "551%40orbit-ml-downloads.iam.gserviceaccount.com"
+#     )
 
 
     # csv_files = list_all_csv('../../source/raw')
