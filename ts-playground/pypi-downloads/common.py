@@ -20,6 +20,7 @@ def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-0
         either 'pypi-stats' or 'big-query'
     start_date : str
     end_date : str
+
     Returns
     -------
     pd.DataFrame
@@ -35,7 +36,7 @@ def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-0
             "../../orbit-ml-downloads-keys.json",
             scopes=["https://www.googleapis.com/auth/cloud-platform"],
         )
-        print(credentials)
+
         client = bigquery.Client(credentials=credentials, project="orbit-ml-downloads")
         print("Running query...")
         query_job = client.query(
