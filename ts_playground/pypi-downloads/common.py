@@ -4,14 +4,8 @@ import pypistats
 from datetime import datetime
 from datetime import date
 from google.oauth2 import service_account
-from utils import build_big_query_json
+from .utils import build_big_query_json, generate_timestamp
 from pathlib import Path
-
-
-def generate_timestamp():
-    now = datetime.now()
-    ts_str = now.strftime("%Y%m%d-%H%M%S")
-    return ts_str
 
 
 def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-09-10', big_query_meta=None):
@@ -79,15 +73,3 @@ def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-0
     df["update_date"] = update_date
     print("Done.")
     return df
-
-
-def download_pypi_stats(dir='./', **kwargs):
-    df = get_pypi_stats(**kwargs)
-    ts = generate_timestamp()
-    print("Saving result as csv file...")
-    df.to_csv("{}/orbit-ml-download-{}.csv".format(dir, ts), index=False)
-    print("Done.")
-
-
-if __name__ != 'main':
-    download_pypi_stats()
