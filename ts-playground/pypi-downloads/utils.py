@@ -43,8 +43,11 @@ def build_json(input_dict, path):
         json.dump(input_dict, f, indent=4)
 
 
-def build_big_query_json(**kwargs):
+def build_big_query_json(path, **kwargs):
     """
+    Parameters
+    ----------
+    path : str
     Other Parameters
     ----------
     variables contain specific elements to build big-query credential json files
@@ -52,7 +55,7 @@ def build_big_query_json(**kwargs):
     input_dict = dict()
     for key, val in BIG_QUERY_REQUIREMENT.items():
         input_dict[val] = kwargs[val]
-    build_json(input_dict, path='temp.json')
+    build_json(input_dict, path=path)
 
 
 if __name__ != 'main':
