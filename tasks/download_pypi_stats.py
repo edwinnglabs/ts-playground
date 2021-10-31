@@ -1,5 +1,5 @@
 import sys
-from ts_playground.pypi_downloads.common import get_pypi_stats
+from ts_playground. import get_pypi_stats
 from ts_playground.pypi_downloads.utils import generate_timestamp, build_big_query_json
 
 

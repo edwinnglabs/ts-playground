@@ -32,7 +32,7 @@ def get_pypi_stats(source='big-query', start_date='2020-09-01', end_date='2020-0
         # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "../../orbit-ml-downloads-keys.json"
 
         # either build a temp json file or use pre-defined
-        offline_json = Path("../../orbit-ml-downloads-keys.json")
+        offline_json = Path("temp.json")
         if offline_json.exists():
             credentials = service_account.Credentials.from_service_account_file(
                 "../../orbit-ml-downloads-keys.json",
