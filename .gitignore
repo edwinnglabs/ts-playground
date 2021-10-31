@@ -139,3 +139,4 @@ dmypy.json
 *.DS_Store
 ts-playground/pypi-downloads/temp.json
 ts_playground/pypi-downloads/temp.json
+ts_playground/pypi_downloads/temp.json
