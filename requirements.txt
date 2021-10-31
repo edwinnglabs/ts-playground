@@ -1,4 +1,2 @@
 pandas
-pypistats
-google-cloud-bigquery
 matplotlib
