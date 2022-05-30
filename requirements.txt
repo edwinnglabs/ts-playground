@@ -1,2 +1,6 @@
 pandas
 matplotlib
+pyro-ppl
+torch
+tqdm
+jupyter
