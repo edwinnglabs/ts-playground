@@ -4,3 +4,4 @@ pyro-ppl
 torch
 tqdm
 jupyter
+pymc
