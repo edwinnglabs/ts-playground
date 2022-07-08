@@ -11,10 +11,10 @@ data {
 }
 
 parameters{
-  // Qt
-  real<lower=0, upper=SD_Y> state_sigma;
   // Ht
   real<lower=0, upper=SD_Y> obs_sigma;
+  // Qt
+  real<lower=0, upper=obs_sigma> state_sigma;
 }
 
 transformed parameters{
@@ -37,7 +37,7 @@ model {
   state_sigma ~ normal(state_sigma_mean, state_sigma_sd);
   obs_sigma ~ normal(obs_sigma_mean, obs_sigma_sd);
   for (t in 1:N){
-    target += -0.5 * log(F[t]) + v[t] ^ 2 / F[t];
+    target += -0.5 * log(fabs(F[t])) + v[t] ^ 2 / F[t];
   }
 }
 
