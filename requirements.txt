@@ -5,3 +5,4 @@ torch
 tqdm
 jupyter
 pymc
+pystan==2.19.1.1
