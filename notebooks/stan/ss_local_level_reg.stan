@@ -1,6 +1,12 @@
 data {
   int<lower=1> N;
+  // number of states
+  int<lower=1> M;
   vector[N] Y;
+  // this is almost like Zt except that each Zt is diagonal and hence can be repacked into 2D-array with 
+  // time as the second dimension
+  // users can also treat each column vector of XREG is the row vector Z_t with num of series (p) = 1
+  matrix[N, M] XREG;
   real<lower=0> SD_Y;
   real A1;
   real P1;
@@ -11,31 +17,35 @@ data {
 }
 
 parameters{
-  // Ht
+  // sqrt of Ht
   real<lower=0> obs_sigma;
-  // Qt
-  real<lower=0> state_sigma;
+  // sqrt of Qt
+  vector[M]<lower=0> state_sigma;
 }
 
 transformed parameters{
-  vector[N + 1] P;
-  vector[N + 1] a;
-  vector[N] v;
+  matrix[N + 1, M] P;
+  matrix[N + 1, M] a;
+  matrix[N, M] v;
   vector[N] F;
-  // vector[N] K;
-  real state_sigma_sq = state_sigma ^ 2;
-  real obs_sigma_sq = obs_sigma ^ 2;
-  a[1] = A1;
-  P[1] = P1;
+  vector[N] K;
+  real obs_sigma_sq;
+  vector[M] state_sigma_sq;
+  state_sigma_sq = state_sigma ^ 2;
+  obs_sigma_sq = obs_sigma ^ 2;
+  a[1, :] = A1;
+  P[1, :] = P1;
+
   for (t in 1:N) {
-     v[t] = Y[t] - a[t];
-     F[t] = P[t] + obs_sigma_sq;
-     // K[t] = P[t] / F[t];
+     v[t] = Y[t] - dot_product(Z[t, :], a[t, :]);
+     // diagonal entries re-cast as one dimension array / vector
+     // diagonal matrix transpose equals itself
+     F[t] = sum(Z[t, :] * P[t, :] * Z[t, :]) + obs_sigma_sq;
+     K[t] = P[t, :] * Z[t, :];
      a[t+1] = a[t] + P[t] * v[t] / F[t];
-     // a[t+1] = a[t] + K[t] * v[t];
-     // P[t+1] = P[t] - K[t] ^ 2 * F[t] + state_sigma_sq;
+
      P[t+1] = P[t] * (1 - P[t] / F[t]) + state_sigma_sq;
-     // P[t+1] = P[t] - square(P[t]) / F[t] + state_sigma_sq);
+
   }
 }
 
