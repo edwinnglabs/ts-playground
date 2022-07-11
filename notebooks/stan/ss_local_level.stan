@@ -3,11 +3,11 @@ data {
   vector[N] Y;
   real<lower=0> SD_Y;
   real A1;
-  real P1;
-  real STATE_SIGMA_MEAN;
-  real STATE_SIGMA_SD;
-  real OBS_SIGMA_MEAN;
-  real OBS_SIGMA_SD;
+  real<lower=0> P1;
+  real<lower=0> STATE_SIGMA_MEAN;
+  real<lower=0> STATE_SIGMA_SD;
+  real<lower=0> OBS_SIGMA_MEAN;
+  real<lower=0> OBS_SIGMA_SD;
 }
 
 parameters{
@@ -18,13 +18,13 @@ parameters{
 }
 
 transformed parameters{
-  vector[N + 1] P;
+  vector[N + 1]P;
   vector[N + 1] a;
   vector[N] v;
   vector[N] F;
   // vector[N] K;
-  real state_sigma_sq = state_sigma ^ 2;
-  real obs_sigma_sq = obs_sigma ^ 2;
+  real<lower=0> state_sigma_sq = state_sigma ^ 2;
+  real<lower=0> obs_sigma_sq = obs_sigma ^ 2;
   a[1] = A1;
   P[1] = P1;
   for (t in 1:N) {
@@ -40,7 +40,6 @@ transformed parameters{
 }
 
 model {
-  real loglik;
   state_sigma ~ normal(STATE_SIGMA_MEAN, STATE_SIGMA_SD);
   obs_sigma ~ normal(OBS_SIGMA_MEAN, OBS_SIGMA_SD);
   for (t in 1:N){
