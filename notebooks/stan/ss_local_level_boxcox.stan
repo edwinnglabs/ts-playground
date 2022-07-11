@@ -15,6 +15,8 @@ parameters{
   real<lower=0> obs_sigma;
   // Qt
   real<lower=0> state_sigma;
+  // for box-cox-transformation
+  real<lower=0,upper=1> lambda;
 }
 
 transformed parameters{
@@ -22,20 +24,21 @@ transformed parameters{
   vector[N + 1] a;
   vector[N] v;
   vector[N] F;
-  // vector[N] K;
+  vector[N] y_tran;
   real<lower=0> state_sigma_sq = state_sigma ^ 2;
   real<lower=0> obs_sigma_sq = obs_sigma ^ 2;
+
+  for (t in 1:N) {
+    y_tran[t] = ((Y[t] ^ lambda) - 1) / lambda;
+  }
+
   a[1] = A1;
   P[1] = P1;
   for (t in 1:N) {
-     v[t] = Y[t] - a[t];
+     v[t] = y_tran[t] - a[t];
      F[t] = P[t] + obs_sigma_sq;
-     // K[t] = P[t] / F[t];
      a[t+1] = a[t] + P[t] * v[t] / F[t];
-     // a[t+1] = a[t] + K[t] * v[t];
-     // P[t+1] = P[t] - K[t] ^ 2 * F[t] + state_sigma_sq;
      P[t+1] = P[t] * (1 - P[t] / F[t]) + state_sigma_sq;
-     // P[t+1] = P[t] - square(P[t]) / F[t] + state_sigma_sq);
   }
 }
 
