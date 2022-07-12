@@ -18,7 +18,6 @@ transformed data {
   // number of local states (number of series) + 1 global state
   int<lower=1> NUM_OF_STATES = NUM_OF_SERIES + 1;
   matrix[NUM_OF_SERIES, NUM_OF_STATES] Zt;
-  Zt = rep_matrix(0, NUM_OF_SERIES, NUM_OF_STATES);
   for (i in 1:NUM_OF_SERIES) {
     Zt[i, i] = 1;
     Zt[i, NUM_OF_STATES] = 1;
@@ -41,11 +40,9 @@ transformed parameters{
   vector[NUM_OF_STATES] a[NUM_OF_STEPS+1];
   vector[NUM_OF_SERIES] v[NUM_OF_STEPS];
   matrix[NUM_OF_SERIES, NUM_OF_SERIES] F[NUM_OF_STEPS];
-  matrix[NUM_OF_SERIES, NUM_OF_STEPS] y_tran;
+  vector[NUM_OF_SERIES] y_tran[NUM_OF_STEPS];
   // transition matrix
   matrix[NUM_OF_STATES, NUM_OF_STATES] TrMat;
-  vector[NUM_OF_STEPS] loglik;
-
   TrMat = diag_matrix(append_row(rho, 1));
 
 
@@ -61,8 +58,8 @@ transformed parameters{
   for (t in 1:NUM_OF_STEPS) {
     matrix[NUM_OF_SERIES, NUM_OF_SERIES] F_inv;
     vector[NUM_OF_STATES] att;
-    matrix[NUM_OF_STATES, NUM_OF_STATES] Ptt; 
-    v[t] = y_tran[:, t] - Zt * a[t];
+    matrix[NUM_OF_SERIES, NUM_OF_SERIES] Ptt; 
+    v[t] = y_tran[t] - Zt * a[t];
     F[t] = Zt * P[t] * Zt' + diag_matrix(square(obs_sigma));
 
     F_inv   = inverse(F[t]);
@@ -70,8 +67,6 @@ transformed parameters{
     Ptt = P[t] - P[t] * Zt' * F_inv * Zt * P[t];
     a[t+1] = TrMat * att;
     P[t+1] = TrMat * Ptt * TrMat' + diag_matrix(square(state_sigma));
-    // print("t: ", t, " v[t]:", v[t], " F[t]:", F[t]);
-    loglik[t] = -0.5 * (log(determinant(F[t])) + v[t]' * F_inv * v[t]);
   }
 }
 
@@ -79,7 +74,9 @@ model {
   state_sigma ~ normal(STATE_SIGMA_MEAN, STATE_SIGMA_SD);
   obs_sigma ~ normal(OBS_SIGMA_MEAN, OBS_SIGMA_SD);
   for (t in 1:NUM_OF_STEPS){
-    target += loglik[t];
+    for (s in 1:NUM_OF_SERIES) {
+      target += -0.5 * log(fabs(F[s, t]) + square(v[s, t]) / F[s, t]);
+    }
   }
 }
 
